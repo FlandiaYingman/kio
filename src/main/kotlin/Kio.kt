@@ -7,12 +7,24 @@ import java.io.File
 //
 
 var File.text: String
-    get() = this.readText()
-    set(value) = this.writeText(value)
+    get() {
+        if (this.notExists()) this.createFile()
+        return this.readText()
+    }
+    set(value) {
+        this.requireExists()
+        this.writeText(value)
+    }
 
 var File.bytes: ByteArray
-    get() = this.readBytes()
-    set(value) = this.writeBytes(value)
+    get() {
+        if (this.notExists()) this.createFile()
+        return this.readBytes()
+    }
+    set(value) {
+        this.requireExists()
+        this.writeBytes(value)
+    }
 
 
 //
