@@ -3,6 +3,19 @@
 import java.io.File
 
 //
+// File Assertion
+//
+
+fun File.requireExists() {
+    if (this.notExists()) throw NoSuchFileException(this)
+}
+
+fun File.requireNotExists() {
+    if (this.exists()) throw FileAlreadyExistsException(this)
+}
+
+
+//
 // File Text & Bytes
 //
 
@@ -53,14 +66,6 @@ fun File.renameSuffix(suffix: String): File {
 
 fun File.notExists(): Boolean {
     return this.exists().not()
-}
-
-fun File.requireExists() {
-    if (this.notExists()) throw NoSuchFileException(this)
-}
-
-fun File.requireNotExists() {
-    if (this.exists()) throw FileAlreadyExistsException(this)
 }
 
 fun File.createFile() {
