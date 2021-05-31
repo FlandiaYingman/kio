@@ -16,6 +16,39 @@ fun File.requireNotExists() {
 
 
 //
+// File Creation & Deletion
+//
+
+fun File.notExists(): Boolean {
+    return this.exists().not()
+}
+
+fun File.createFile() {
+    this.requireNotExists()
+    val parent = this.canonicalFile.parentFile
+    if (parent?.notExists() == true) {
+        parent.createDir()
+    }
+    this.createNewFile()
+}
+
+fun File.createDir() {
+    this.requireNotExists()
+    this.mkdirs()
+}
+
+fun File.deleteFile() {
+    this.requireExists()
+    this.delete()
+}
+
+fun File.deleteDir() {
+    this.requireExists()
+    this.deleteRecursively()
+}
+
+
+//
 // File Text & Bytes
 //
 
@@ -57,37 +90,4 @@ fun File.renamePrefix(prefix: String): File {
 fun File.renameSuffix(suffix: String): File {
     this.requireExists()
     return this.resolveSibling("${this.nameWithoutExtension}.$suffix").also { this.renameTo(it) }
-}
-
-
-//
-// File Creation & Deletion
-//
-
-fun File.notExists(): Boolean {
-    return this.exists().not()
-}
-
-fun File.createFile() {
-    this.requireNotExists()
-    val parent = this.canonicalFile.parentFile
-    if (parent?.notExists() == true) {
-        parent.createDir()
-    }
-    this.createNewFile()
-}
-
-fun File.createDir() {
-    this.requireNotExists()
-    this.mkdirs()
-}
-
-fun File.deleteFile() {
-    this.requireExists()
-    this.delete()
-}
-
-fun File.deleteDir() {
-    this.requireExists()
-    this.deleteRecursively()
 }
