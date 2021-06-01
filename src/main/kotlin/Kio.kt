@@ -57,12 +57,15 @@ fun File.notExists(): Boolean {
  * - The parents of the file is not required to exist.
  */
 fun File.createFile() {
-    this.requireNotExists()
     val parent = this.canonicalFile.parentFile
     if (parent?.notExists() == true) {
         parent.createDir()
     }
-    this.createNewFile()
+    if (this.notExists()) {
+        this.createNewFile()
+    } else {
+        requireIsFile()
+    }
 }
 
 /**
@@ -72,8 +75,15 @@ fun File.createFile() {
  * - The parents of the directory is not required to exist.
  */
 fun File.createDir() {
-    this.requireNotExists()
-    this.mkdirs()
+    val parent = this.canonicalFile.parentFile
+    if (parent?.notExists() == true) {
+        parent.createDir()
+    }
+    if (this.notExists()) {
+        this.mkdir()
+    } else {
+        requireIsDir()
+    }
 }
 
 /**
@@ -82,8 +92,9 @@ fun File.createDir() {
  * - No matter whether the file exists or not.
  */
 fun File.deleteFile() {
-    this.requireExists()
-    this.delete()
+    if (this.exists()) {
+        this.delete()
+    }
 }
 
 /**
@@ -93,8 +104,9 @@ fun File.deleteFile() {
  * - The directory is not required to be empty.
  */
 fun File.deleteDir() {
-    this.requireExists()
-    this.deleteRecursively()
+    if (this.exists()) {
+        this.deleteRecursively()
+    }
 }
 
 
@@ -110,11 +122,11 @@ fun File.deleteDir() {
  */
 var File.text: String
     get() {
-        if (this.notExists()) this.createFile()
+        this.createFile()
         return this.readText()
     }
     set(value) {
-        this.requireExists()
+        this.createFile()
         this.writeText(value)
     }
 
@@ -126,11 +138,11 @@ var File.text: String
  */
 var File.bytes: ByteArray
     get() {
-        if (this.notExists()) this.createFile()
+        this.createFile()
         return this.readBytes()
     }
     set(value) {
-        this.requireExists()
+        this.createFile()
         this.writeBytes(value)
     }
 
