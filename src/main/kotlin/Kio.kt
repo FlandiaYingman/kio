@@ -20,6 +20,24 @@ fun File.requireNotExists() {
     if (this.exists()) throw FileAlreadyExistsException(this)
 }
 
+/**
+ * Throws an [NoSuchFileException] if the pathname doesn't denote a file.
+ *
+ * This method assumes that the pathname exists using [File.requireExists].
+ */
+fun File.requireIsFile() {
+    if (this.isFile.not()) throw NoSuchFileException(this, reason = "Isn't file")
+}
+
+/**
+ * Throws an [NoSuchFileException] if the pathname doesn't denote a directory.
+ *
+ * This method assumes that the pathname exists using [File.requireExists].
+ */
+fun File.requireIsDir() {
+    if (this.isDirectory.not()) throw NoSuchFileException(this, reason = "Isn't directory")
+}
+
 
 //
 // File Creation & Deletion
