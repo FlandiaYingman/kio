@@ -1,5 +1,7 @@
 @file:Suppress("unused")
 
+package top.anagke.kio
+
 import java.io.File
 
 //
