@@ -23,7 +23,7 @@ fun File.requireNotExists() {
 /**
  * Throws an [NoSuchFileException] if the pathname doesn't denote a file.
  *
- * This method assumes that the pathname exists using [File.requireExists].
+ * This method assumes that the pathname exists by calling [File.requireExists].
  */
 fun File.requireIsFile() {
     if (this.isFile.not()) throw NoSuchFileException(this, reason = "Isn't file")
@@ -32,7 +32,7 @@ fun File.requireIsFile() {
 /**
  * Throws an [NoSuchFileException] if the pathname doesn't denote a directory.
  *
- * This method assumes that the pathname exists using [File.requireExists].
+ * This method assumes that the pathname exists by calling [File.requireExists].
  */
 fun File.requireIsDir() {
     if (this.isDirectory.not()) throw NoSuchFileException(this, reason = "Isn't directory")
@@ -53,8 +53,9 @@ fun File.notExists(): Boolean {
 /**
  * Creates the file.
  *
- * - No matter whether the file exists or not.
- * - The parents of the file is not required to exist.
+ * - Does nothing if the file already exists.
+ * - Creates parents if the parents don't exist.
+ * - The pathname should denote a file if the it already exists.
  */
 fun File.createFile() {
     val parent = this.canonicalFile.parentFile
@@ -69,10 +70,11 @@ fun File.createFile() {
 }
 
 /**
- * Creates the file.
+ * Creates the dir.
  *
- * - No matter whether the directory exists or not.
- * - The parents of the directory is not required to exist.
+ * - Does nothing if the directory already exists.
+ * - Creates parents if the parents don't exist.
+ * - The pathname should denote a directory if the it already exists.
  */
 fun File.createDir() {
     val parent = this.canonicalFile.parentFile
@@ -89,7 +91,7 @@ fun File.createDir() {
 /**
  * Deletes the file.
  *
- * - No matter whether the file exists or not.
+ * - Does nothing if the file doesn't exist.
  */
 fun File.deleteFile() {
     if (this.exists()) {
@@ -98,10 +100,9 @@ fun File.deleteFile() {
 }
 
 /**
- * Deletes the directory.
+ * Deletes the directory (recursively).
  *
- * - No matter whether the directory exists or not.
- * - The directory is not required to be empty.
+ * - Does nothing if the directory doesn't exist.
  */
 fun File.deleteDir() {
     if (this.exists()) {
@@ -117,7 +118,7 @@ fun File.deleteDir() {
 /**
  * The text of the file.
  *
- * - If the file doesn't exist, getting or setting this value will create a new file.
+ * - Creates the file if the file doesn't exist.
  * - The pathname should denote a file.
  */
 var File.text: String
@@ -133,7 +134,7 @@ var File.text: String
 /**
  * The bytes of the file.
  *
- * - If the file doesn't exist, getting or setting this value will create a new file.
+ * - Creates the file if the file doesn't exist.
  * - The pathname should denote a file.
  */
 var File.bytes: ByteArray
@@ -153,6 +154,8 @@ var File.bytes: ByteArray
 
 /**
  * Renames the file, returns the new file.
+ *
+ * - The file should exist.
  */
 fun File.rename(name: String): File {
     this.requireExists()
@@ -161,6 +164,8 @@ fun File.rename(name: String): File {
 
 /**
  * Renames the file, but only prefix (i.e. name without extension), returns the new file.
+ *
+ * - The file should exist.
  */
 fun File.renamePrefix(prefix: String): File {
     this.requireExists()
@@ -169,6 +174,8 @@ fun File.renamePrefix(prefix: String): File {
 
 /**
  * Renames the file, but only suffix (i.e. extension), returns the new file.
+ *
+ * - The file should exist.
  */
 fun File.renameSuffix(suffix: String): File {
     this.requireExists()
