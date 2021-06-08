@@ -3,6 +3,7 @@
 package top.anagke.kio
 
 import java.io.File
+import java.nio.file.Files
 
 //
 // File Assertion
@@ -182,4 +183,33 @@ fun File.renamePrefix(prefix: String): File {
 fun File.renameSuffix(suffix: String): File {
     this.requireExists()
     return this.resolveSibling("${this.nameWithoutExtension}.$suffix").also { this.renameTo(it) }
+}
+
+
+//
+// Equality Check
+//
+
+fun File.isSame(other: File): Boolean {
+    val thisPath = this.toPath()
+    val otherPath = other.toPath()
+    return Files.isSameFile(thisPath, otherPath)
+}
+
+fun File.isNotSame(other: File): Boolean {
+    return !this.isSame(other)
+}
+
+fun File.isParentSame(other: File): Boolean {
+    val thisPath = this.toPath()
+    val otherPath = other.toPath()
+    return Files.isSameFile(thisPath.parent, otherPath.parent)
+}
+
+fun File.isParentNotSame(other: File): Boolean {
+    return !this.isParentSame(other)
+}
+
+fun File.isNameExtendedBy(other: File, suffix: String): Boolean {
+    return "${other.name}.$suffix" == this.name
 }
