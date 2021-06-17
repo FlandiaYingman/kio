@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package top.anagke.kio
+package top.anagke.kio.file
 
 import java.io.File
 import java.nio.file.Files
@@ -190,26 +190,22 @@ fun File.renameSuffix(suffix: String): File {
 // Equality Check
 //
 
-fun File.isSame(other: File): Boolean {
+fun File.sameTo(other: File): Boolean {
     val thisPath = this.toPath()
     val otherPath = other.toPath()
     return Files.isSameFile(thisPath, otherPath)
 }
 
-fun File.isNotSame(other: File): Boolean {
-    return !this.isSame(other)
+fun File.differTo(other: File): Boolean {
+    return !this.sameTo(other)
 }
 
-fun File.isParentSame(other: File): Boolean {
+fun File.parentSameTo(other: File): Boolean {
     val thisPath = this.toPath()
     val otherPath = other.toPath()
     return Files.isSameFile(thisPath.parent, otherPath.parent)
 }
 
-fun File.isParentNotSame(other: File): Boolean {
-    return !this.isParentSame(other)
-}
-
-fun File.isNameExtendedBy(other: File, suffix: String): Boolean {
-    return "${other.name}.$suffix" == this.name
+fun File.parentDifferTo(other: File): Boolean {
+    return !this.parentSameTo(other)
 }
