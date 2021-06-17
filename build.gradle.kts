@@ -16,6 +16,12 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.0-M1")
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 tasks.register<Jar>("javadocJar") {
