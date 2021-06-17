@@ -3,6 +3,7 @@ plugins {
 
     `maven-publish`
     signing
+    id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
     id("org.jetbrains.dokka") version "1.4.32"
 }
 
@@ -79,4 +80,22 @@ publishing {
 
 signing {
     sign(publishing.publications["mavenCentral"])
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            username.set(mavenCentralRepositoryUsername)
+            password.set(mavenCentralRepositoryPassword)
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+        }
+    }
+}
+
+tasks.register("release") {
+    group = "publishing"
+
+    dependsOn(tasks.named("publishToSonatype"))
+    dependsOn(tasks.named("closeAndReleaseSonatypeStagingRepository"))
 }
