@@ -16,6 +16,7 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
+    implementation(kotlin("stdlib-jdk8"))
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.0-M1")
 }
@@ -39,8 +40,8 @@ java {
     withJavadocJar()
 }
 
-val mavenCentralRepositoryUsername: String by project
-val mavenCentralRepositoryPassword: String by project
+val mavenUsername: String = project.findProperty("mavenCentralRepositoryUsername").toString()
+val mavenPassword: String = project.findProperty("mavenCentralRepositoryPassword").toString()
 
 publishing {
     publications {
@@ -77,8 +78,8 @@ publishing {
             val snapshotsRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
             url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
             credentials {
-                username = mavenCentralRepositoryUsername
-                password = mavenCentralRepositoryPassword
+                username = mavenUsername
+                password = mavenPassword
             }
         }
     }
@@ -91,8 +92,8 @@ signing {
 nexusPublishing {
     repositories {
         sonatype {
-            username.set(mavenCentralRepositoryUsername)
-            password.set(mavenCentralRepositoryPassword)
+            username.set(mavenUsername)
+            password.set(mavenPassword)
             nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
             snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
         }
