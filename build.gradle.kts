@@ -19,6 +19,9 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.0-M1")
+
+    testImplementation("org.hamcrest:hamcrest:2.2")
+    testImplementation("ca.seinesoftware:hamcrest-path:1.0.1")
 }
 
 tasks.test {
